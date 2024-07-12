@@ -73,7 +73,7 @@
 	fan: pwm-fan {
 		compatible = "pwm-fan";
 		#cooling-cells = <2>;
-		cooling-levels = <255 175 85 0>;
+		cooling-levels = <255 175 140 100 85 0>;
 		pwms = <&pwm 0 10000>;
 		status = "okay";
 	};
@@ -120,19 +120,45 @@
 };
 
 &cpu_thermal {
+	trips {
+		cpu_trip_active_low: active-low {
+			temperature = <40000>;
+		};
+		cpu_trip_active_lowmed: active-lowmed {
+			temperature = <50000>;
+			hysteresis = <2000>;
+			type = "active";
+		};
+		cpu_trip_active_lowmedplus: active-lowmedplus {
+			temperature = <60000>;
+			hysteresis = <2000>;
+			type = "active";
+		};
+	};
+
 	cooling-maps {
-		cpu-active-low {
+		map-cpu-active-low {
 			cooling-device = <&fan 0 1>;
 			trip = <&cpu_trip_active_low>;
 		};
 
-		cpu-active-med {
+		map-cpu-active-lowmed {
 			cooling-device = <&fan 1 2>;
+			trip = <&cpu_trip_active_lowmed>;
+		};
+
+		map-cpu-active-lowmedplus {
+			cooling-device = <&fan 2 3>;
+			trip = <&cpu_trip_active_lowmedplus>;
+		};
+
+		map-cpu-active-med {
+			cooling-device = <&fan 3 4>;
 			trip = <&cpu_trip_active_med>;
 		};
 
-		cpu-active-high {
-			cooling-device = <&fan 2 3>;
+		map-cpu-active-high {
+			cooling-device = <&fan 4 5>;
 			trip = <&cpu_trip_active_high>;
 		};
 	};
